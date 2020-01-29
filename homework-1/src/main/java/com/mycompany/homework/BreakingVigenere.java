@@ -6,7 +6,12 @@
 package com.mycompany.homework;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
@@ -92,7 +97,7 @@ public class BreakingVigenere {
         }
 
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        ArrayList<HashMap<String, Integer>> subcryptogramsFrecuencies = new ArrayList<>();
+        ArrayList<Map<String, Integer>> subcryptogramsFrecuencies = new ArrayList<>();
 
         //Obtener frecuencias
         for (int sub = 0; sub < subcryptograms.length; sub++) {
@@ -107,9 +112,28 @@ public class BreakingVigenere {
                 subcryptogramsFrecuencies.get(sub).put(String.valueOf(alphabet.charAt(characterPosition)), frecuencyCounter);
             }
         }
-        System.out.println(subcryptogramsFrecuencies);
-        //Organizar frecuencias de mayor a menor en cada subcriptograma
+        
+        //Ordernar frecuencias
+        ArrayList<Map<String, Integer>> subcryptogramsFrecuenciesOrdered = new ArrayList<>();
+        for(int sub = 0; sub < subcryptograms.length; sub++) {
+            Map<String, Integer> sorted = sortByValue(subcryptogramsFrecuencies.get(sub));
+            subcryptogramsFrecuenciesOrdered.add(sorted);
+        }
+        
         return new String[keylen];
+    }
+    
+    private static Map<String, Integer> sortByValue(Map<String, Integer> unsortMap) {
+
+        List<Map.Entry<String, Integer>> list =
+                new LinkedList<>(unsortMap.entrySet());
+
+        Collections.sort(list, (Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) -> (o1.getValue()).compareTo(o2.getValue()));
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
     }
 
     static boolean verify(String plain, String encrypted, String key) {

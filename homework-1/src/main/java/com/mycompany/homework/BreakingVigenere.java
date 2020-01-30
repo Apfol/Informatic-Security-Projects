@@ -7,14 +7,11 @@ package com.mycompany.homework;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Stream;
 import javax.swing.JOptionPane;
 
 /**
@@ -104,35 +101,77 @@ public class BreakingVigenere {
             subcryptogramsFrecuencies.add(new HashMap<>());
             for (int characterPosition = 0; characterPosition < alphabet.length(); characterPosition++) {
                 int frecuencyCounter = 0;
-                for (int encryptedPosition = 0; encryptedPosition < text.length(); encryptedPosition++) {
-                    if (String.valueOf(alphabet.charAt(characterPosition)).toLowerCase().equals(String.valueOf(text.charAt(encryptedPosition)).toLowerCase())) {
+                for (int encryptedPosition = 0; encryptedPosition < subcryptograms[sub].length(); encryptedPosition++) {
+                    if (String.valueOf(alphabet.charAt(characterPosition)).toLowerCase().equals(String.valueOf(subcryptograms[sub].charAt(encryptedPosition)).toLowerCase())) {
                         frecuencyCounter++;
                     }
                 }
                 subcryptogramsFrecuencies.get(sub).put(String.valueOf(alphabet.charAt(characterPosition)), frecuencyCounter);
             }
         }
-        
+
         //Ordernar frecuencias
         ArrayList<Map<String, Integer>> subcryptogramsFrecuenciesOrdered = new ArrayList<>();
-        for(int sub = 0; sub < subcryptograms.length; sub++) {
+        for (int sub = 0; sub < subcryptograms.length; sub++) {
             Map<String, Integer> sorted = sortByValue(subcryptogramsFrecuencies.get(sub));
             subcryptogramsFrecuenciesOrdered.add(sorted);
         }
-        
+
+        String possibleKey = "";
+
+        List<List<String>> posiblesKeysLetters = new ArrayList<>();
+
+        for (int sub = 0; sub < subcryptogramsFrecuenciesOrdered.size(); sub++) {
+            Map<String, Integer> actualHash = subcryptogramsFrecuenciesOrdered.get(sub);
+            Integer[] frecuencies = actualHash.values().toArray(new Integer[subcryptogramsFrecuenciesOrdered.get(sub).size()]);
+            int firstHighFrecuency = frecuencies[frecuencies.length - 1];
+            posiblesKeysLetters.add(new ArrayList<>());
+            for (int character = 0; character < alphabet.length(); character++) {
+                int ePosition = character + 4;
+                int oPosition = character + 4 + 10;
+
+                if (ePosition > alphabet.length() - 1) {
+                    ePosition = ePosition - (alphabet.length() - 1) - 1;
+                }
+                if (oPosition > alphabet.length() - 1) {
+                    oPosition = oPosition - (alphabet.length() - 1) - 1;
+                }
+                String AEO = String.valueOf(alphabet.charAt(character)) + String.valueOf(alphabet.charAt(ePosition)) + String.valueOf(alphabet.charAt(oPosition));
+                if (actualHash.get(String.valueOf(AEO.charAt(0))) == firstHighFrecuency || actualHash.get(String.valueOf(AEO.charAt(1))) == firstHighFrecuency || actualHash.get(String.valueOf(AEO.charAt(2))) == firstHighFrecuency) {
+                    possibleKey += String.valueOf(AEO.charAt(0));
+                    posiblesKeysLetters.get(sub).add(String.valueOf(AEO.charAt(0)));
+                }
+            }
+        }
+
+        List<String> words = new ArrayList<>();
+        String word = "";
+        for (int i = 0; i < posiblesKeysLetters.size(); i++) {
+            word = posiblesKeysLetters.get(i).get(i);
+            for (int j = i + 1; j < posiblesKeysLetters.get(i).size(); j++) {
+                word += posiblesKeysLetters.get(j).get(i);
+            }
+        }
+
+        System.out.println(possibleKey);
+
         return new String[keylen];
     }
     
+    static void getWord(List<List<String>> posiblesKeysLetters) {
+        
+    }
+
     private static Map<String, Integer> sortByValue(Map<String, Integer> unsortMap) {
 
-        List<Map.Entry<String, Integer>> list =
-                new LinkedList<>(unsortMap.entrySet());
+        List<Map.Entry<String, Integer>> list
+                = new LinkedList<>(unsortMap.entrySet());
 
         Collections.sort(list, (Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) -> (o1.getValue()).compareTo(o2.getValue()));
         Map<String, Integer> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> entry : list) {
+        list.forEach((entry) -> {
             sortedMap.put(entry.getKey(), entry.getValue());
-        }
+        });
         return sortedMap;
     }
 

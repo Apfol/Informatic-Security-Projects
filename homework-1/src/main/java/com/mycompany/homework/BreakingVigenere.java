@@ -136,7 +136,6 @@ public class BreakingVigenere {
             for (int character = 0; character < alphabet.length(); character++) {
                 int ePosition = character + 4;
                 int oPosition = character + 4 + 10;
-
                 if (ePosition > alphabet.length() - 1) {
                     ePosition = ePosition - (alphabet.length() - 1) - 1;
                 }
@@ -179,10 +178,8 @@ public class BreakingVigenere {
     }
 
     private static Map<String, Integer> sortByValue(Map<String, Integer> unsortMap) {
-
         List<Map.Entry<String, Integer>> list
                 = new LinkedList<>(unsortMap.entrySet());
-
         Collections.sort(list, (Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) -> (o1.getValue()).compareTo(o2.getValue()));
         Map<String, Integer> sortedMap = new LinkedHashMap<>();
         list.forEach((entry) -> {

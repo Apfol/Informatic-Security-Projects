@@ -5,6 +5,11 @@
  */
 package com.mycompany.homework;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,7 +27,7 @@ public class BreakingVigenere {
 
     final static int POSITION_NOT_FOUND = 30;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
 
         String plain;
         String encrypted;
@@ -44,7 +49,11 @@ public class BreakingVigenere {
             case 2:
                 encrypted = JOptionPane.showInputDialog("Introduce el texto cifrado:");
                 keyLength = Integer.parseInt(JOptionPane.showInputDialog("Introduce la longitud de la llave:"));
-                crack(encrypted, keyLength);
+                String[] possibleKeys = crack(encrypted, keyLength);
+                System.out.println("Posibles claves: ");
+                for(String k: possibleKeys) {
+                    System.out.println(k);
+                }
                 break;
             case +3:
                 plain = JOptionPane.showInputDialog("Introduce el texto descifrado:");
@@ -73,7 +82,7 @@ public class BreakingVigenere {
         return textEncripted;
     }
 
-    static String[] crack(String text, int keylen) {
+    static String[] crack(String text, int keylen) throws FileNotFoundException, IOException {
 
         String[] subcryptograms = new String[keylen];
         int counter = 0;
@@ -117,10 +126,8 @@ public class BreakingVigenere {
             subcryptogramsFrecuenciesOrdered.add(sorted);
         }
 
-        String possibleKey = "";
-
+        //Obtener letras que conforman la clave
         List<List<String>> posiblesKeysLetters = new ArrayList<>();
-
         for (int sub = 0; sub < subcryptogramsFrecuenciesOrdered.size(); sub++) {
             Map<String, Integer> actualHash = subcryptogramsFrecuenciesOrdered.get(sub);
             Integer[] frecuencies = actualHash.values().toArray(new Integer[subcryptogramsFrecuenciesOrdered.get(sub).size()]);
@@ -138,28 +145,37 @@ public class BreakingVigenere {
                 }
                 String AEO = String.valueOf(alphabet.charAt(character)) + String.valueOf(alphabet.charAt(ePosition)) + String.valueOf(alphabet.charAt(oPosition));
                 if (actualHash.get(String.valueOf(AEO.charAt(0))) == firstHighFrecuency || actualHash.get(String.valueOf(AEO.charAt(1))) == firstHighFrecuency || actualHash.get(String.valueOf(AEO.charAt(2))) == firstHighFrecuency) {
-                    possibleKey += String.valueOf(AEO.charAt(0));
                     posiblesKeysLetters.get(sub).add(String.valueOf(AEO.charAt(0)));
                 }
             }
         }
 
-        List<String> words = new ArrayList<>();
-        String word = "";
-        for (int i = 0; i < posiblesKeysLetters.size(); i++) {
-            word = posiblesKeysLetters.get(i).get(i);
-            for (int j = i + 1; j < posiblesKeysLetters.get(i).size(); j++) {
-                word += posiblesKeysLetters.get(j).get(i);
+        //Obtener posibles claves en base del diccionario
+        File dictionary = new File("spanish.txt");
+        BufferedReader br = new BufferedReader(new FileReader(dictionary));
+        List<String> possibleKeys = new ArrayList<>();
+        String st;
+        while ((st = br.readLine()) != null) {
+            int counterLetters = 0;
+            if (st.length() == keylen) {
+                for (int i = 0; i < st.length(); i++) {
+                    boolean exitForLetters = false;
+                    for (int j = 0; j < posiblesKeysLetters.get(i).size(); j++) {
+                        if (!exitForLetters) {
+                            if (posiblesKeysLetters.get(i).get(j).toLowerCase().equals(String.valueOf(st.charAt(i)).toLowerCase())) {
+                                exitForLetters = true;
+                                counterLetters++;
+                            }
+                        }
+                    }
+                }
+            }
+            if (counterLetters == keylen) {
+                possibleKeys.add(st);
             }
         }
-
-        System.out.println(possibleKey);
-
-        return new String[keylen];
-    }
-    
-    static void getWord(List<List<String>> posiblesKeysLetters) {
-        
+        String[] possibleKeysArray = possibleKeys.toArray(new String[possibleKeys.size()]);
+        return possibleKeysArray;
     }
 
     private static Map<String, Integer> sortByValue(Map<String, Integer> unsortMap) {

@@ -151,7 +151,6 @@ public class BreakingVigenere {
 
         //Obtener posibles claves en base del diccionario
         File dictionary = new File("spanish.txt");
-        System.out.println(new File("spanish.txt").getAbsolutePath());
         BufferedReader br = new BufferedReader(new FileReader(dictionary));
         List<String> possibleKeys = new ArrayList<>();
         String st;

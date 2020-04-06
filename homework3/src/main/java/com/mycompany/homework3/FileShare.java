@@ -48,7 +48,8 @@ public class FileShare {
         //Las guardamos asi podemos usarlas despues
         //a lo largo del tiempo
         rsa.saveToDiskPrivateKey(PRIVATE_KEY_NAME);
-        rsa.saveToDiskPublicKey(PUBLIC_KEY_NAME);
+        String publicKeyPath = rsa.saveToDiskPublicKey(PUBLIC_KEY_NAME);
+        JOptionPane.showMessageDialog(null, "Claves generadas \nDirectorio: " + publicKeyPath.substring(0, publicKeyPath.length() - 7));
     }
 
     static void cifrarArchivo(RSA rsa) throws Exception {

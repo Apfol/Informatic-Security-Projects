@@ -2,7 +2,7 @@ package com.mycompany.homework3;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -113,20 +113,27 @@ public class RSA {
         return Arrays.copyOfRange(b2, 1, b2.length);
     }
 
-    public void saveToDiskPrivateKey(String path) throws IOException {
-        try ( Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"))) {
+    public String saveToDiskPrivateKey(String path) throws IOException {
+        File privateKeyFile = new File(path);
+        FileOutputStream fileOutput = new FileOutputStream(privateKeyFile);
+        try ( Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
             out.write(this.getPrivateKeyString());
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
+        return null;
     }
 
-    public void saveToDiskPublicKey(String path) throws Exception {
-        try ( Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"))) {
+    public String saveToDiskPublicKey(String path) throws Exception {
+        File publicKeyFile = new File(path);
+        FileOutputStream fileOutput = new FileOutputStream(publicKeyFile);
+        try ( Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
             out.write(this.getPublicKeyString());
+            return publicKeyFile.getAbsolutePath();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return null;
     }
 
     public void openFromDiskPublicKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {

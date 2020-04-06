@@ -5,11 +5,7 @@
  */
 package com.mycompany.homework3;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.security.*;
 import javax.swing.JOptionPane;
 
@@ -19,8 +15,8 @@ import javax.swing.JOptionPane;
  */
 public class FileShare {
     
-    static final String PUBLIC_KEY_NAME = "rsa.pem";
-    static final String PRIVATE_KEY_NAME = "rsa.pri";
+    static final String PUBLIC_KEY_NAME = "keys/rsa.pem";
+    static final String PRIVATE_KEY_NAME = "keys/rsa.pri";
 
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
 
@@ -49,31 +45,11 @@ public class FileShare {
         //a lo largo del tiempo
         rsa.saveToDiskPrivateKey(PRIVATE_KEY_NAME);
         String publicKeyPath = rsa.saveToDiskPublicKey(PUBLIC_KEY_NAME);
-        JOptionPane.showMessageDialog(null, "Claves generadas \nDirectorio: " + publicKeyPath.substring(0, publicKeyPath.length() - 7));
+        JOptionPane.showMessageDialog(null, "Claves generadas en el directorio:\n" + publicKeyPath.substring(0, publicKeyPath.length() - 7));
     }
 
     static void cifrarArchivo(RSA rsa) throws Exception {
 
-    }
-
-    static void saveToDiskPrivateKey(String path) throws Exception {
-        try {
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
-            //out.write(this.getPrivateKeyString());
-            out.close();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-    }
-
-    static void saveToDiskPublicKey(String path) {
-        try {
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
-            //out.write(this.getPublicKeyString());
-            out.close();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
     }
 
     static void descifrarArchivo(RSA rsa) {

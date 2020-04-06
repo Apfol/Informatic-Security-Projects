@@ -19,8 +19,8 @@ import javax.swing.JOptionPane;
  */
 public class FileShare {
     
-    static final String PUBLIC_KEY_PATH = "rsa.pem";
-    static final String PRIVATE_KEY_PATH = "rsa.pri";
+    static final String PUBLIC_KEY_NAME = "rsa.pem";
+    static final String PRIVATE_KEY_NAME = "rsa.pri";
 
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
 
@@ -47,8 +47,8 @@ public class FileShare {
         rsa.genKeyPair(1024);
         //Las guardamos asi podemos usarlas despues
         //a lo largo del tiempo
-        rsa.saveToDiskPrivateKey(PRIVATE_KEY_PATH);
-        rsa.saveToDiskPublicKey(PUBLIC_KEY_PATH);
+        rsa.saveToDiskPrivateKey(PRIVATE_KEY_NAME);
+        rsa.saveToDiskPublicKey(PUBLIC_KEY_NAME);
     }
 
     static void cifrarArchivo(RSA rsa) throws Exception {

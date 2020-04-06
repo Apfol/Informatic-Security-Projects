@@ -38,8 +38,11 @@ public class RSA {
     static final String PUBLIC_KEY_PATH = "keys/" + PUBLIC_KEY_NAME;
     static final String PRIVATE_KEY_NAME = "private.pri";
     static final String PRIVATE_KEY_PATH = "keys/" + PRIVATE_KEY_NAME;
-    static final String FILE_ENCRYPTED_PATH = "files/file-encrypted";
-    static final String FILE_DECRYPTED_PATH = "files/file-decrypted";
+    static final String ENCRYPTED_FILES_FOLDER_NAME = "encrypt";
+    static final String FILE_ENCRYPTED_PATH = ENCRYPTED_FILES_FOLDER_NAME + "/file-encrypted";
+    static final String DECRYPTED_FILES_FOLDER_NAME = "decrypt";
+    static final String FILE_DECRYPTED_PATH = DECRYPTED_FILES_FOLDER_NAME + "/file-decrypted";
+    
 
     private PrivateKey privateKey = null;
     private PublicKey publicKey = null;

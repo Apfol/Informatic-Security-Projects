@@ -33,17 +33,15 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 /**
- * Class 
+ * Class
+ *
  * @author Andres Ramos
  * @author Carlos Gutierrez
  * @version 1.0
  * @see https://www.alvarodeleon.net/encriptar-y-desencriptar-con-rsa-en-java/
- * @author Alvaro Leon
- * Methods taken from reference: genKeyPair(); 
- * encrypt(); without the file execution
- * decrypt(); without the file execution
+ * @author Alvaro Leon Methods taken from reference: genKeyPair(); encrypt();
+ * without the file execution decrypt(); without the file execution
  */
-
 public class RSA {
 
     static final String PUBLIC_KEY_NAME = "public.pem";
@@ -54,7 +52,6 @@ public class RSA {
     static final String FILE_ENCRYPTED_PATH = ENCRYPTED_FILES_FOLDER_NAME + "/file-encrypted";
     static final String DECRYPTED_FILES_FOLDER_NAME = "decrypt";
     static final String FILE_DECRYPTED_PATH = DECRYPTED_FILES_FOLDER_NAME + "/file-decrypted";
-    
 
     private PrivateKey privateKey = null;
     private PublicKey publicKey = null;
@@ -64,77 +61,86 @@ public class RSA {
     private File fileToDecrypt;
 
     /**
- * Method to get the private key as a file
- * @return Returns the private key file
- */
+     * Method to get the private key as a file
+     *
+     * @return Returns the private key file
+     */
     public File getPrivateKeyFile() {
         return privateKeyFile;
     }
-    /**
- * Method to get the public  key as a file
- * @return  Returns the pubic key file 
- */
 
+    /**
+     * Method to get the public key as a file
+     *
+     * @return Returns the pubic key file
+     */
     public File getPublicKeyFile() {
         return publicKeyFile;
     }
-    /**
- * Method to set the private key as a file
- * @param privateKeyFile A file that contains the private key
- */
 
+    /**
+     * Method to set the private key as a file
+     *
+     * @param privateKeyFile A file that contains the private key
+     */
     public void setPrivateKeyFile(File privateKeyFile) {
         this.privateKeyFile = privateKeyFile;
     }
-    /**
- * Method to set  the public  key as a file
- * @param  publicKeyFile A file that contains the public key, with extension PEM
- */
 
+    /**
+     * Method to set the public key as a file
+     *
+     * @param publicKeyFile A file that contains the public key, with extension
+     * PEM
+     */
     public void setPublicKeyFile(File publicKeyFile) {
         this.publicKeyFile = publicKeyFile;
     }
-    /**
- * Method to get the selected file to encrypt
- * @return  returns the selected file
- */
 
+    /**
+     * Method to get the selected file to encrypt
+     *
+     * @return returns the selected file
+     */
     public File getFileToEncrypt() {
         return fileToEncrypt;
     }
-    /**
- * Method to set the selected file to encrypt
- * @param fileToEncrypt A file that contains some kind of information and will be encrypted. Extensions pretty like txt or cvs
- */
 
+    /**
+     * Method to set the selected file to encrypt
+     *
+     * @param fileToEncrypt A file that contains some kind of information and
+     * will be encrypted. Extensions pretty like txt or cvs
+     */
     public void setFileToEncrypt(File fileToEncrypt) {
         this.fileToEncrypt = fileToEncrypt;
     }
-    
-    /**
- * Method to get  the selected file to decrypt
- * @return  Returns the selected decrypt file
- */
 
+    /**
+     * Method to get the selected file to decrypt
+     *
+     * @return Returns the selected decrypt file
+     */
     public File getFileToDecrypt() {
         return fileToDecrypt;
     }
-    
-    /**
- * Method to set the selected file to encrypt
- * @param fileToDecrypt A file that contains some kind of information and will be decrypted.
- */
 
+    /**
+     * Method to set the selected file to encrypt
+     *
+     * @param fileToDecrypt A file that contains some kind of information and
+     * will be decrypted.
+     */
     public void setFileToDecrypt(File fileToDecrypt) {
         this.fileToDecrypt = fileToDecrypt;
     }
-    
-    /**
- * Method to transform a string key parameter to a byte array,then creates a private key with the
- * parameters given from the byte array
- * @param key An String parameter with the key
- */
 
+    /**
+     * Method to transform a string key parameter to a byte array,then creates a
+     * private key with the parameters given from the byte array
+     *
+     * @param key An String parameter with the key
+     */
     public void setPrivateKeyString(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] encodedPrivateKey = stringToBytes(key);
 
@@ -142,13 +148,13 @@ public class RSA {
         PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
         this.privateKey = keyFactory.generatePrivate(privateKeySpec);
     }
-    
-    /**
- * Method to transform a string key parameter to a byte array,then creates a public  key with the
- * parameters given from the byte array
- * @param key An String parameter with the key
- */
 
+    /**
+     * Method to transform a string key parameter to a byte array,then creates a
+     * public key with the parameters given from the byte array
+     *
+     * @param key An String parameter with the key
+     */
     public void setPublicKeyString(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         byte[] encodedPublicKey = stringToBytes(key);
@@ -157,36 +163,44 @@ public class RSA {
         X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
         this.publicKey = keyFactory.generatePublic(publicKeySpec);
     }
-    /**
- * Method to get a private key returned as a string
- * @return String with the private key encoded
- */
 
+    /**
+     * Method to get a private key returned as a string
+     *
+     * @return String with the private key encoded
+     */
     public String getPrivateKeyString() {
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(this.privateKey.getEncoded());
         return bytesToString(pkcs8EncodedKeySpec.getEncoded());
     }
-    /**
- * Method to get a public  key returned as a string
- * @return String with the public key encoded
- */
 
+    /**
+     * Method to get a public key returned as a string
+     *
+     * @return String with the public key encoded
+     */
     public String getPublicKeyString() {
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(this.publicKey.getEncoded());
         return bytesToString(x509EncodedKeySpec.getEncoded());
     }
 
     /**
- * Method to generate a pair of keys (Private and public) then settled on the class constructor
- * @param size An int parameter with the size specification to generate public and private keys
- * @throws NoSuchAlgorithmException Throws an exception when an Cryptographic algorithm is
- * requested but is not available.
- * @throws InvalidKeyException Throws an exception when there is an invalid encoding key
- * @throws NoSuchPaddingException Throws an exception when there is an particular padding mechanism requested but  is not available 
- * @throws IllegalBlockSizeException Throws an exception when there is an length of data provided to a block cipher is incorrect
- * @throws BadPaddingException Throws an exception when the provided data is not padding properly 
- */
-    
+     * Method to generate a pair of keys (Private and public) then settled on
+     * the class constructor
+     *
+     * @param size An int parameter with the size specification to generate
+     * public and private keys
+     * @throws NoSuchAlgorithmException Throws an exception when an
+     * Cryptographic algorithm is requested but is not available.
+     * @throws InvalidKeyException Throws an exception when there is an invalid
+     * encoding key
+     * @throws NoSuchPaddingException Throws an exception when there is an
+     * particular padding mechanism requested but is not available
+     * @throws IllegalBlockSizeException Throws an exception when there is an
+     * length of data provided to a block cipher is incorrect
+     * @throws BadPaddingException Throws an exception when the provided data is
+     * not padding properly
+     */
     public void genKeyPair(int size) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -198,18 +212,27 @@ public class RSA {
     }
 
     /**
- * Method to encrypt the file previously settled. Transform the file into a byte array, then it is encoded into a Base64 standard, finally 
- * drops it into the file encrypted path. "encrypt" directory.
- * @throws NoSuchAlgorithmException Throws an exception when an Cryptographic algorithm is
- * requested but is not available.
- * @throws InvalidKeyException Throws an exception when there is an invalid encoding key
- * @throws NoSuchPaddingException Throws an exception when there is an particular padding mechanism requested but  is not available 
- * @throws IllegalBlockSizeException Throws an exception when there is an length of data provided to a block cipher is incorrect
- * @throws BadPaddingException Throws an exception when the provided data is not padding properly 
- * @throws InvalidKeySpecException Throws an exception when there is an different spec of the key provided
- * @throws UnsupportedEncodingException Throws an exception when the file encoding is different form expected
- * @throws NoSuchProviderException Throws an exception when the security provider is requested but is not available
- */
+     * Method to encrypt the file previously settled. Transform the file into a
+     * byte array, then it is encoded into a Base64 standard, finally drops it
+     * into the file encrypted path. "encrypt" directory.
+     *
+     * @throws NoSuchAlgorithmException Throws an exception when an
+     * Cryptographic algorithm is requested but is not available.
+     * @throws InvalidKeyException Throws an exception when there is an invalid
+     * encoding key
+     * @throws NoSuchPaddingException Throws an exception when there is an
+     * particular padding mechanism requested but is not available
+     * @throws IllegalBlockSizeException Throws an exception when there is an
+     * length of data provided to a block cipher is incorrect
+     * @throws BadPaddingException Throws an exception when the provided data is
+     * not padding properly
+     * @throws InvalidKeySpecException Throws an exception when there is an
+     * different spec of the key provided
+     * @throws UnsupportedEncodingException Throws an exception when the file
+     * encoding is different form expected
+     * @throws NoSuchProviderException Throws an exception when the security
+     * provider is requested but is not available
+     */
     public void encrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, UnsupportedEncodingException, NoSuchProviderException, IOException {
         byte[] encryptedBytes;
 
@@ -220,97 +243,112 @@ public class RSA {
         byte[] fileToEncryptBytesDecoded = Base64.getDecoder().decode(fileToEncryptBytesEncoded);
         encryptedBytes = cipher.doFinal(fileToEncryptBytesDecoded);
 
-        try ( FileOutputStream fos = new FileOutputStream(FILE_ENCRYPTED_PATH + "." + getFileExtension(fileToEncrypt.getAbsolutePath()).get())) {
+        try (FileOutputStream fos = new FileOutputStream(FILE_ENCRYPTED_PATH + "." + getFileExtension(fileToEncrypt.getAbsolutePath()).get())) {
             fos.write(encryptedBytes);
         }
     }
-    /**
- * Method to decrypt the file previously settled. Transform the file into a byte array, then drops it into the file decrypted path. "decrypt" directory.
- * @throws NoSuchAlgorithmException Throws an exception when an Cryptographic algorithm is
- * requested but is not available.
- * @throws InvalidKeyException Throws an exception when there is an invalid encoding key
- * @throws NoSuchPaddingException Throws an exception when there is an particular padding mechanism requested but  is not available 
- * @throws IllegalBlockSizeException Throws an exception when there is an length of data provided to a block cipher is incorrect
- * @throws BadPaddingException Throws an exception when the provided data is not padding properly 
- * @throws FileNotFoundException Throws an exception when the requested file is not available.
- * @throws UnsupportedEncodingException Throws an exception when the file encoding is different form expected
- */
 
+    /**
+     * Method to decrypt the file previously settled. Transform the file into a
+     * byte array, then drops it into the file decrypted path. "decrypt"
+     * directory.
+     *
+     * @throws NoSuchAlgorithmException Throws an exception when an
+     * Cryptographic algorithm is requested but is not available.
+     * @throws InvalidKeyException Throws an exception when there is an invalid
+     * encoding key
+     * @throws NoSuchPaddingException Throws an exception when there is an
+     * particular padding mechanism requested but is not available
+     * @throws IllegalBlockSizeException Throws an exception when there is an
+     * length of data provided to a block cipher is incorrect
+     * @throws BadPaddingException Throws an exception when the provided data is
+     * not padding properly
+     * @throws FileNotFoundException Throws an exception when the requested file
+     * is not available.
+     * @throws UnsupportedEncodingException Throws an exception when the file
+     * encoding is different form expected
+     */
     public void decrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException, IOException {
         byte[] decryptedBytes;
-        
 
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
         byte[] fileToDecryptBytes = Files.readAllBytes(fileToDecrypt.toPath());
         decryptedBytes = cipher.doFinal(fileToDecryptBytes);
 
-        try ( FileOutputStream fos = new FileOutputStream(FILE_DECRYPTED_PATH + "." + getFileExtension(fileToDecrypt.getAbsolutePath()).get())) {
+        try (FileOutputStream fos = new FileOutputStream(FILE_DECRYPTED_PATH + "." + getFileExtension(fileToDecrypt.getAbsolutePath()).get())) {
             fos.write(decryptedBytes);
         }
     }
-/**
- * Method that get the file extension of an file and check if it is null
- * @param filename String with the filename that would be used
- * @return Returns the file extension, if it is not null 
- */
-    
+
+    /**
+     * Method that get the file extension of an file and check if it is null
+     *
+     * @param filename String with the filename that would be used
+     * @return Returns the file extension, if it is not null
+     */
     public Optional<String> getFileExtension(String filename) {
         return Optional.ofNullable(filename)
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
-/**
- * Method that transform a set of bytes to a string 
- * @param b A byte array that may contains a set of bytes.
- * @return Returns a string with the byte array encoded into a bigInteger
- */
+
+    /**
+     * Method that transform a set of bytes to a string
+     *
+     * @param b A byte array that may contains a set of bytes.
+     * @return Returns a string with the byte array encoded into a bigInteger
+     */
     public String bytesToString(byte[] b) {
         byte[] b2 = new byte[b.length + 1];
         b2[0] = 1;
         System.arraycopy(b, 0, b2, 1, b.length);
         return new BigInteger(b2).toString(36);
     }
-/**
- * Method that transform a String to a set of bytes.
- * @param s A string   that may contains a value to be converted into a byte set.
- * @return Returns a set of bytes(Array)
- */
+
+    /**
+     * Method that transform a String to a set of bytes.
+     *
+     * @param s A string that may contains a value to be converted into a byte
+     * set.
+     * @return Returns a set of bytes(Array)
+     */
     public byte[] stringToBytes(String s) {
         byte[] b2 = new BigInteger(s, 36).toByteArray();
         return Arrays.copyOfRange(b2, 1, b2.length);
     }
-    
-    /**
- * Method that saves the private key to a specific path settled
- * @param path A String with the path to save the private key file
- * @return Returns Null
- * @throws IOException Throws an exception when the main process does not finish as expected
- */
 
+    /**
+     * Method that saves the private key to a specific path settled
+     *
+     * @param path A String with the path to save the private key file
+     * @return Returns Null
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     */
     public String saveToDiskPrivateKey(String path) throws IOException {
         this.privateKeyFile = new File(path);
         FileOutputStream fileOutput = new FileOutputStream(privateKeyFile);
-        try ( Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
+        try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
             out.write(this.getPrivateKeyString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
-     /**
- * Method that saves the public key to a specific path settled
- * @param path A String with the path to save the public  key file
- * @return Returns Null
- * @throws Exception Throws an exception when the main process does not finish as expected
- */
 
-    
-
+    /**
+     * Method that saves the public key to a specific path settled
+     *
+     * @param path A String with the path to save the public key file
+     * @return Returns Null
+     * @throws Exception Throws an exception when the main process does not
+     * finish as expected
+     */
     public String saveToDiskPublicKey(String path) throws Exception {
         this.publicKeyFile = new File(path);
         FileOutputStream fileOutput = new FileOutputStream(publicKeyFile);
-        try ( Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
+        try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
             out.write(this.getPublicKeyString());
             return publicKeyFile.getAbsolutePath();
         } catch (Exception e) {
@@ -318,44 +356,50 @@ public class RSA {
         }
         return null;
     }
-    
-    /**
- * Method that find out the public key path and set  it
- * @param path A String with the path where the public key is stored
- * @throws IOException Throws an exception when the main process does not finish as expected
- * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is requested but it is not available
- * @throws InvalidKeySpecException  Throws an exception when the selected key file does not have the correct specifications.
- */
-    
 
+    /**
+     * Method that find out the public key path and set it
+     *
+     * @param path A String with the path where the public key is stored
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     * @throws NoSuchAlgorithmException Throws an exception when the
+     * cryptographic algorithm is requested but it is not available
+     * @throws InvalidKeySpecException Throws an exception when the selected key
+     * file does not have the correct specifications.
+     */
     public void openFromDiskPublicKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String content = this.readFileAsString(path);
         this.setPublicKeyString(content);
     }
 
     /**
- * Method that find out the private key path and set it
- * @param path A String with the path where the private key is stored
- * @throws IOException Throws an exception when the main process does not finish as expected
- * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is requested but it is not available
- * @throws InvalidKeySpecException  Throws an exception when the selected key file does not have the correct specifications.
- */
-    
+     * Method that find out the private key path and set it
+     *
+     * @param path A String with the path where the private key is stored
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     * @throws NoSuchAlgorithmException Throws an exception when the
+     * cryptographic algorithm is requested but it is not available
+     * @throws InvalidKeySpecException Throws an exception when the selected key
+     * file does not have the correct specifications.
+     */
     public void openFromDiskPrivateKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String content = this.readFileAsString(path);
         this.setPrivateKeyString(content);
     }
-    
-    /**
- * Method that recover a file to be encrypt or decrypt 
- * @param filePath A String with the path where a objective file is stored
- * @throws IOException Throws an exception when the main process does not finish as expected
- * @return String with the file data prepared to be encrypt or decrypt
- */
 
+    /**
+     * Method that recover a file to be encrypt or decrypt
+     *
+     * @param filePath A String with the path where a objective file is stored
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     * @return String with the file data prepared to be encrypt or decrypt
+     */
     private String readFileAsString(String filePath) throws IOException {
         StringBuilder fileData = new StringBuilder();
-        try ( BufferedReader reader = new BufferedReader(
+        try (BufferedReader reader = new BufferedReader(
                 new FileReader(filePath))) {
             char[] buf = new char[1024];
             int numRead = 0;

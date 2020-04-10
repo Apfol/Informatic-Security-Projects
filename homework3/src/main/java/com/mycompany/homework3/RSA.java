@@ -277,6 +277,12 @@ public class RSA {
         return Arrays.copyOfRange(b2, 1, b2.length);
     }
     
+    /**
+ * Method that saves the private key to a specific path settled
+ * @param path A String with the path to save the private key file
+ * @return Returns Null
+ * @throws IOException Throws an exception when the main process does not finish as expected
+ */
 
     public String saveToDiskPrivateKey(String path) throws IOException {
         this.privateKeyFile = new File(path);
@@ -288,6 +294,14 @@ public class RSA {
         }
         return null;
     }
+     /**
+ * Method that saves the public key to a specific path settled
+ * @param path A String with the path to save the public  key file
+ * @return Returns Null
+ * @throws Exception Throws an exception when the main process does not finish as expected
+ */
+
+    
 
     public String saveToDiskPublicKey(String path) throws Exception {
         this.publicKeyFile = new File(path);
@@ -300,16 +314,40 @@ public class RSA {
         }
         return null;
     }
+    
+    /**
+ * Method that find out the public key path and set  it
+ * @param path A String with the path where the public key is stored
+ * @throws IOException Throws an exception when the main process does not finish as expected
+ * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is requested but it is not available
+ * @throws InvalidKeySpecException  Throws an exception when the selected key file does not have the correct specifications.
+ */
+    
 
     public void openFromDiskPublicKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String content = this.readFileAsString(path);
         this.setPublicKeyString(content);
     }
 
+    /**
+ * Method that find out the private key path and set it
+ * @param path A String with the path where the private key is stored
+ * @throws IOException Throws an exception when the main process does not finish as expected
+ * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is requested but it is not available
+ * @throws InvalidKeySpecException  Throws an exception when the selected key file does not have the correct specifications.
+ */
+    
     public void openFromDiskPrivateKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String content = this.readFileAsString(path);
         this.setPrivateKeyString(content);
     }
+    
+    /**
+ * Method that recover a file to be encrypt or decrypt 
+ * @param filePath A String with the path where a objective file is stored
+ * @throws IOException Throws an exception when the main process does not finish as expected
+ * @return String with the file data prepared to be encrypt or decrypt
+ */
 
     private String readFileAsString(String filePath) throws IOException {
         StringBuilder fileData = new StringBuilder();

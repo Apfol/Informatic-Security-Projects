@@ -38,6 +38,10 @@ import javax.crypto.NoSuchPaddingException;
  * @author Carlos Gutierrez
  * @version 1.0
  * @see https://www.alvarodeleon.net/encriptar-y-desencriptar-con-rsa-en-java/
+ * @author Alvaro Leon
+ * Methods taken from reference: genKeyPair(); 
+ * encrypt(); without the file execution
+ * decrypt(); without the file execution
  */
 
 public class RSA {

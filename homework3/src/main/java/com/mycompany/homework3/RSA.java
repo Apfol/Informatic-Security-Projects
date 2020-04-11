@@ -51,6 +51,8 @@ public class RSA {
   static final String FILE_ENCRYPTED_PATH = ENCRYPTED_FILES_FOLDER_NAME + "/file-encrypted";
   static final String DECRYPTED_FILES_FOLDER_NAME = "decrypt";
   static final String FILE_DECRYPTED_PATH = DECRYPTED_FILES_FOLDER_NAME + "/file-decrypted";
+  static final int MAXIMUN_FILE_ENCRYPT = 117;
+  static final int MAXIMUN_FILE_DECRYPT = 128;
 
   private PrivateKey privateKey = null;
   private PublicKey publicKey = null;
@@ -243,19 +245,24 @@ public class RSA {
     try (FileOutputStream fos =
         new FileOutputStream(
             FILE_ENCRYPTED_PATH + "." + getFileExtension(fileToEncrypt.getAbsolutePath()).get())) {
-      byte[] maximunbytes = new byte[117];
+      byte[] maximunBytes = new byte[MAXIMUN_FILE_ENCRYPT];
       int counter = 0;
-      if (fileToEncryptBytesDecoded.length < 117) {
-        encryptedBytes = cipher.doFinal(maximunbytes);
+      if (fileToEncryptBytesDecoded.length <= MAXIMUN_FILE_ENCRYPT) {
+        encryptedBytes = cipher.doFinal(fileToEncryptBytesDecoded);
         fos.write(encryptedBytes);
       } else {
         for (int i = 0; i < fileToEncryptBytesDecoded.length; i++) {
-          maximunbytes[counter] = fileToEncryptBytesDecoded[i];
-          counter++;
-          if (counter == 116) {
-            encryptedBytes = cipher.doFinal(maximunbytes);
+          maximunBytes[counter] = fileToEncryptBytesDecoded[i];
+          if (counter == MAXIMUN_FILE_ENCRYPT - 1) {
+            encryptedBytes = cipher.doFinal(maximunBytes);
             fos.write(encryptedBytes);
+            maximunBytes = new byte[MAXIMUN_FILE_ENCRYPT];
             counter = 0;
+          } else if (i == fileToEncryptBytesDecoded.length - 1) {
+            encryptedBytes = cipher.doFinal(maximunBytes);
+            fos.write(encryptedBytes);
+          } else {
+            counter++;
           }
         }
       }
@@ -286,12 +293,31 @@ public class RSA {
     Cipher cipher = Cipher.getInstance("RSA");
     cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
     byte[] fileToDecryptBytes = Files.readAllBytes(fileToDecrypt.toPath());
-    decryptedBytes = cipher.doFinal(fileToDecryptBytes);
 
     try (FileOutputStream fos =
         new FileOutputStream(
             FILE_DECRYPTED_PATH + "." + getFileExtension(fileToDecrypt.getAbsolutePath()).get())) {
-      fos.write(decryptedBytes);
+      byte[] maximunBytes = new byte[MAXIMUN_FILE_DECRYPT];
+      int counter = 0;
+      if (fileToDecryptBytes.length <= MAXIMUN_FILE_DECRYPT) {
+        decryptedBytes = cipher.doFinal(fileToDecryptBytes);
+        fos.write(decryptedBytes);
+      } else {
+        for (int i = 0; i < fileToDecryptBytes.length; i++) {
+          maximunBytes[counter] = fileToDecryptBytes[i];
+          if (counter == MAXIMUN_FILE_DECRYPT - 1) {
+            decryptedBytes = cipher.doFinal(maximunBytes);
+            fos.write(decryptedBytes);
+            maximunBytes = new byte[MAXIMUN_FILE_DECRYPT];
+            counter = 0;
+          } else if (i == fileToDecryptBytes.length - 1) {
+            decryptedBytes = cipher.doFinal(maximunBytes);
+            fos.write(decryptedBytes);
+          } else {
+            counter++;
+          }
+        }
+      }
     }
   }
 

@@ -161,7 +161,7 @@ public class FileShare {
     rsa.decrypt();
     JOptionPane.showMessageDialog(
         null,
-        "Archivo encriptado guardado en el directorio:\n"
+        "Archivo desencriptado guardado en el directorio:\n"
             + rootProjectPath
             + RSA.DECRYPTED_FILES_FOLDER_NAME);
   }

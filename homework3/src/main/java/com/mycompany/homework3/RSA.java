@@ -44,13 +44,18 @@ import javax.crypto.NoSuchPaddingException;
 public class RSA {
 
   static final String PUBLIC_KEY_NAME = "public.pem";
+  static final String PUBLIC_KEY_NAME_DELIVER = "publicBonifacio.pem";
+
   static final String PUBLIC_KEY_PATH = "keys/" + PUBLIC_KEY_NAME;
+  static final String PUBLIC_KEY_PATH_DELIVER = "keys/" + PUBLIC_KEY_NAME_DELIVER;
   static final String PRIVATE_KEY_NAME = "private.pri";
   static final String PRIVATE_KEY_PATH = "keys/" + PRIVATE_KEY_NAME;
   static final String ENCRYPTED_FILES_FOLDER_NAME = "encrypt";
   static final String FILE_ENCRYPTED_PATH = ENCRYPTED_FILES_FOLDER_NAME + "/file-encrypted";
   static final String DECRYPTED_FILES_FOLDER_NAME = "decrypt";
   static final String FILE_DECRYPTED_PATH = DECRYPTED_FILES_FOLDER_NAME + "/file-decrypted";
+  static final String FILE_ENCRYPTED_PATH_Deliver =
+      ENCRYPTED_FILES_FOLDER_NAME + "/file-encryptedanastacia";
   static final int MAXIMUN_FILE_ENCRYPT = 117;
   static final int MAXIMUN_FILE_DECRYPT = 128;
 
@@ -66,8 +71,20 @@ public class RSA {
    *
    * @return Returns the private key file
    */
-  public File getPrivateKeyFile() {
-    return privateKeyFile;
+  public String getPublickeyPathNAME() {
+    return PUBLIC_KEY_PATH;
+  }
+
+  public String getPublickeyPathNAMEdeliver() {
+    return PUBLIC_KEY_PATH_DELIVER;
+  }
+
+  public String getFileEncryptedpath() {
+    return FILE_ENCRYPTED_PATH;
+  }
+
+  public String getFileEncryptedpathdeliver() {
+    return FILE_ENCRYPTED_PATH_Deliver;
   }
 
   /**
@@ -241,7 +258,6 @@ public class RSA {
     byte[] fileToEncryptBytes = Files.readAllBytes(fileToEncrypt.toPath());
     byte[] fileToEncryptBytesEncoded = Base64.getEncoder().encode(fileToEncryptBytes);
     byte[] fileToEncryptBytesDecoded = Base64.getDecoder().decode(fileToEncryptBytesEncoded);
-
     try (FileOutputStream fos =
         new FileOutputStream(
             FILE_ENCRYPTED_PATH + "." + getFileExtension(fileToEncrypt.getAbsolutePath()).get())) {

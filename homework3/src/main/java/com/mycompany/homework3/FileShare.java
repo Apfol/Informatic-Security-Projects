@@ -1,5 +1,7 @@
 package com.mycompany.homework3;
 
+import static java.sql.DriverManager.println;
+
 import java.io.IOException;
 import java.security.*;
 import javax.swing.JFileChooser;
@@ -14,6 +16,9 @@ import javax.swing.JOptionPane;
  * @see RSA
  */
 public class FileShare {
+  static RSA rsa = new RSA();
+  static Servidor server = null;
+  static Cliente client = null;
 
   /**
    * Main method with the interface interaction
@@ -24,9 +29,6 @@ public class FileShare {
    * @throws IOException Throws an exception when the main process does not finish as expected
    */
   public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
-
-    RSA rsa = new RSA();
-
     int option;
     do {
       option =
@@ -36,6 +38,8 @@ public class FileShare {
                       + "1. Crear claves.\n"
                       + "2. Cifrar archivo.\n"
                       + "3. Descifrar archivo.\n"
+                      + "4. Iniciar servidor(Resivir archivo).\n"
+                      + "5. Iniciar cliente (enviar archivo).\n"
                       + "0. Salir."));
       switch (option) {
         case 1:
@@ -46,6 +50,12 @@ public class FileShare {
           break;
         case 3:
           descifrarArchivo(rsa);
+          break;
+        case 4:
+          iniciarservidor();
+          break;
+        case 5:
+          iniciarcliente();
           break;
       }
     } while (option != 0);
@@ -81,7 +91,7 @@ public class FileShare {
    * @param rsa an instance of RSA class
    * @throws Exception Throws an exception when the main process does not finish as expected
    */
-  static void cifrarArchivo(RSA rsa) throws Exception {
+  public static void cifrarArchivo(RSA rsa) throws Exception {
 
     // check the current working directory, then save it to rootProjectPath
     String rootProjectPath =
@@ -127,7 +137,7 @@ public class FileShare {
    * @param rsa an instance of RSA class
    * @throws Exception Throws an exception when the main process does not finish as expected
    */
-  static void descifrarArchivo(RSA rsa) throws Exception {
+  public static void descifrarArchivo(RSA rsa) throws Exception {
     // check the current working directory, then save it to rootProjectPath
     String rootProjectPath =
         rsa.getPublicKeyFile()
@@ -161,8 +171,22 @@ public class FileShare {
     rsa.decrypt();
     JOptionPane.showMessageDialog(
         null,
-        "Archivo desencriptado guardado en el directorio:\n"
+        "Archivo Desencriptado guardado en el directorio:\n"
             + rootProjectPath
             + RSA.DECRYPTED_FILES_FOLDER_NAME);
+  }
+
+  public static void iniciarservidor() throws IOException {
+    server = new Servidor(rsa.getPublickeyPathNAME(), rsa.getFileEncryptedpathdeliver());
+    println("iniciando servidor");
+    println("/");
+  }
+
+  public static void iniciarcliente() {
+    client = new Cliente(rsa.getPublickeyPathNAMEdeliver(), rsa.getFileEncryptedpath());
+  }
+
+  public void descifrarauto() throws Exception {
+    descifrarArchivo(rsa);
   }
 }

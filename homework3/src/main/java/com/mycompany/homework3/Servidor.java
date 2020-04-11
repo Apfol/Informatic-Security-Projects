@@ -1,21 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mycompany.homework3;
 
 import java.net.*; 
 import java.io.*; 
 
 /**
+ * Class Servidor works as an socket server with capacity to manage socket threads
  *
- * @author apolu
+ * @author Andres Ramos
+ * @author Carlos Gutierrez
+ * @version 1.0
+ * @see CllientHandler
  */
 public class Servidor {
      
     
-
+/**
+     * Method where the socket is created with the port 5056 and local ip host, then wait for connections and send them to a class extended from socket threads
+     *
+     * @param publicpath String with the public file path to be sent
+     * @param pathtosave String with the path where the encrypted file would be stored
+     * @see FileShare
+     * 
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     * 
+     * @author Geeksforgeeks
+     * @see https://www.geeksforgeeks.org/introducing-threads-socket-programming-java/
+     * All the instructions between the while loop where taker from the link referenced
+     * 
+     */
     
   
     // constructor with port 

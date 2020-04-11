@@ -1,6 +1,5 @@
 package com.mycompany.homework3;
 
-
 import java.io.IOException;
 
 import java.security.*;
@@ -17,9 +16,10 @@ import javax.swing.JOptionPane;
  * @see RSA
  */
 public class FileShare {
-   static RSA rsa = new RSA();
-  static Servidor server = null;
-   static Cliente client = null;
+
+    static RSA rsa = new RSA();
+    static Servidor server = null;
+    static Cliente client = null;
 
     /**
      * Main method with the interface interaction
@@ -31,9 +31,6 @@ public class FileShare {
      * finish as expected
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
-
-        
-        
 
         int option;
         do {
@@ -54,13 +51,13 @@ public class FileShare {
                 case 3:
                     descifrarArchivo(rsa);
                     break;
-                case 4: 
+                case 4:
                     iniciarservidor();
                     break;
                 case 5:
-                   iniciarcliente();
+                    iniciarcliente();
                     break;
-                    
+
             }
         } while (option != 0);
 
@@ -100,8 +97,7 @@ public class FileShare {
      * finish as expected
      *
      */
-
-   public static void cifrarArchivo(RSA rsa) throws Exception {
+    public static void cifrarArchivo(RSA rsa) throws Exception {
 
         //check the current working directory, then save it to rootProjectPath
         String rootProjectPath = rsa.getPublicKeyFile().getAbsolutePath().substring(0, rsa.getPublicKeyFile().getAbsolutePath().length() - RSA.PUBLIC_KEY_PATH.length());
@@ -132,8 +128,7 @@ public class FileShare {
      * @throws Exception Throws an exception when the main process does not
      * finish as expected
      */
-
-   public static void descifrarArchivo(RSA rsa) throws Exception {
+    public static void descifrarArchivo(RSA rsa) throws Exception {
         //check the current working directory, then save it to rootProjectPath
         String rootProjectPath = rsa.getPublicKeyFile().getAbsolutePath().substring(0, rsa.getPublicKeyFile().getAbsolutePath().length() - RSA.PUBLIC_KEY_PATH.length());
         System.out.println(rootProjectPath);
@@ -154,16 +149,42 @@ public class FileShare {
         rsa.decrypt();
         JOptionPane.showMessageDialog(null, "Archivo encriptado guardado en el directorio:\n" + rootProjectPath + RSA.DECRYPTED_FILES_FOLDER_NAME);
     }
-   public static void iniciarservidor() throws IOException{
-       server = new Servidor(rsa.getPublickeyPathNAME(),rsa.getFileEncryptedpathdeliver());
-                    println("iniciando servidor");
-                    println("/");
-   }
-   public static void iniciarcliente(){
-        client = new Cliente(rsa.getPublickeyPathNAMEdeliver(),rsa.getFileEncryptedpath());
-   }
-    public void descifrarauto() throws Exception{
+
+    /**
+     * Method that make a call to start the Servidor class
+     *
+     * @see Servidor
+     *
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     */
+    public static void iniciarservidor() throws IOException {
+        server = new Servidor(rsa.getPublickeyPathNAME(), rsa.getFileEncryptedpathdeliver());
+        println("iniciando servidor");
+        println("/");
+    }
+
+    /**
+     * Method that make a call to start the Cliente class with parameters: the
+     * public key path where the file would be stored and the path where the
+     * encrypted file is stored
+     *
+     * @see Cliente
+     */
+    public static void iniciarcliente() {
+
+        client = new Cliente(rsa.getPublickeyPathNAMEdeliver(), rsa.getFileEncryptedpath());
+    }
+
+    /**
+     * Method that make a call to a instance of the class FileShare then use the
+     * method descrifrarArchivo();
+     *
+     * @throws Exception Throws an exception when the main process does not
+     * finish as expected
+     */
+    public void descifrarauto() throws Exception {
         descifrarArchivo(rsa);
-        
+
     }
 }

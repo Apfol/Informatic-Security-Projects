@@ -65,20 +65,35 @@ public class RSA {
     private File fileToDecrypt;
 
     /**
-     * Method to get the private key as a file
+     * Method to get the public key path with the name of the file
      *
-     * @return Returns the private key file
+     * @return Returns a string with the public path file
      */
     
     public String getPublickeyPathNAME(){
         return PUBLIC_KEY_PATH;
     }
+    /**
+     * Method to get the public key path with the name of the file with an name alteration to be stored
+     *
+     * @return Returns a string with the public path file name altered
+     */
     public String getPublickeyPathNAMEdeliver(){
         return PUBLIC_KEY_PATH_DELIVER;
     }
+    /**
+     * Method to get the path where the encrypted file is stored
+     *
+     * @return Returns a string with the encrypted path file
+     */
     public String getFileEncryptedpath(){
         return FILE_ENCRYPTED_PATH;
     }
+    /**
+     * Method to get the encrypted file path with an name alteration to be stored
+     *
+     * @return Returns a string with the encrypted path file with an alteration
+     */
     public String getFileEncryptedpathdeliver(){
         return FILE_ENCRYPTED_PATH_Deliver;
     }
@@ -153,6 +168,11 @@ public class RSA {
      * private key with the parameters given from the byte array
      *
      * @param key An String parameter with the key
+     * @throws NoSuchAlgorithmException Throws an exception when an
+     * Cryptographic algorithm is requested but is not available.
+     * @throws InvalidKeySpecException Throws an exception when there is an invalid
+     * encoding key
+     * 
      */
     public void setPrivateKeyString(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] encodedPrivateKey = stringToBytes(key);
@@ -167,6 +187,10 @@ public class RSA {
      * public key with the parameters given from the byte array
      *
      * @param key An String parameter with the key
+     * @throws NoSuchAlgorithmException Throws an exception when an
+     * Cryptographic algorithm is requested but is not available.
+     * @throws InvalidKeySpecException Throws an exception when there is an invalid
+     * encoding key
      */
     public void setPublicKeyString(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
 

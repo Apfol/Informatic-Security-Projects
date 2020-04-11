@@ -1,22 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mycompany.homework3;
 
 import java.awt.HeadlessException;
 import java.net.*;
 import java.io.*;
-import static java.sql.DriverManager.println;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
+ * Class Cliente works as an socket client with capacity to connect to a server providing the ip address, also works has functions like send and receive data(files and text)
  *
- * @author apolu
+ * @author Andres Ramos
+ * @author Carlos Gutierrez
+ * @version 1.0
+ * @see CllientHandler
  */
 public class Cliente {
+    
     // initialize socket and input output streams 
 
     public final static int FILE_SIZE = 90505;
@@ -25,12 +24,20 @@ public class Cliente {
     FileOutputStream fos = null;
     BufferedOutputStream bos = null;
 
-    // constructor to put ip address and port 
+    /**
+     * Method (Constructor) where the socket is created with the port 5056 and local ip host, then wait for connections and send them to a class extended from socket threads
+     *
+     * @param pathtosave String with the public file path to be receive and stored
+     * @param pathfileencrypted String with the path where the encrypted file is  stored
+     * @see FileShare
+     * 
+     * 
+     */
     public Cliente( String pathtosave, String pathfileencrypted) {
-        //Scanner scn = new Scanner(System.in);
+        
         try {
 
-           // scn.reset();
+           
 
             // getting localhost ip 
             String ip = JOptionPane.showInputDialog("Ingrese la ip a la que desea conectarse ","localhost");
@@ -41,15 +48,14 @@ public class Cliente {
             // obtaining input and out streams 
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-            DataOutputStream doss = new DataOutputStream(s.getOutputStream());
+           
 
             // the following loop performs the exchange of 
             // information between client and client handler 
             while (true) {
                 String tosend=JOptionPane.showInputDialog(dis.readUTF());
                 
-               // scn.reset();
-//                 = scn.nextLine();
+
                 dos.writeUTF(tosend);
 
                 // If client sends exit,close this connection  
@@ -58,7 +64,6 @@ public class Cliente {
                     dos.writeUTF(tosend);
                     try {
                         System.out.println("Entro");
-//                    System.out.println(dis.readUTF());
 
                         byte[] mybytearray = new byte[FILE_SIZE];
                         InputStream is = s.getInputStream();
@@ -90,8 +95,7 @@ public class Cliente {
                             s.close();
                         }
                     }
-                   // scn.reset();
-                    //scn.close();
+                  
                     
                     break;
                 } else if (tosend.equals("2")) {
@@ -137,8 +141,7 @@ public class Cliente {
                 System.out.println(received);
             }
 
-            // closing resources 
-           // scn.close();
+     
             dis.close();
             dos.close();
         } catch (HeadlessException | IOException e) {

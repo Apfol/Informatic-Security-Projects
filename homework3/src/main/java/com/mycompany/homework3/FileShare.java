@@ -1,6 +1,9 @@
 package com.mycompany.homework3;
 
+
+
 import static java.sql.DriverManager.println;
+
 
 import java.io.IOException;
 import java.security.*;
@@ -16,50 +19,56 @@ import javax.swing.JOptionPane;
  * @see RSA
  */
 public class FileShare {
-  static RSA rsa = new RSA();
-  static Servidor server = null;
-  static Cliente client = null;
 
-  /**
-   * Main method with the interface interaction
-   *
-   * @param args String array with the user interaction
-   * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is
-   *     requested but it is not available
-   * @throws IOException Throws an exception when the main process does not finish as expected
-   */
-  public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
-    int option;
-    do {
-      option =
-          Integer.parseInt(
-              JOptionPane.showInputDialog(
-                  "Bienvenido\n ¿Qué deseas hacer? \n\n"
-                      + "1. Crear claves.\n"
-                      + "2. Cifrar archivo.\n"
-                      + "3. Descifrar archivo.\n"
-                      + "4. Iniciar servidor(Resivir archivo).\n"
-                      + "5. Iniciar cliente (enviar archivo).\n"
-                      + "0. Salir."));
-      switch (option) {
-        case 1:
-          creaClaves(rsa);
-          break;
-        case 2:
-          cifrarArchivo(rsa);
-          break;
-        case 3:
-          descifrarArchivo(rsa);
-          break;
-        case 4:
-          iniciarservidor();
-          break;
-        case 5:
-          iniciarcliente();
-          break;
-      }
-    } while (option != 0);
-  }
+
+    static RSA rsa = new RSA();
+    static Servidor server = null;
+    static Cliente client = null;
+
+    /**
+     * Main method with the interface interaction
+     *
+     * @param args String array with the user interaction
+     * @throws NoSuchAlgorithmException Throws an exception when the
+     * cryptographic algorithm is requested but it is not available
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     */
+    public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
+
+        int option;
+        do {
+            option = Integer.parseInt(JOptionPane.showInputDialog("Bienvenido\n ¿Qué deseas hacer? \n\n"
+                    + "1. Crear claves.\n"
+                    + "2. Cifrar archivo.\n"
+                    + "3. Descifrar archivo.\n"
+                    + "4. Iniciar servidor(Recibir archivo).\n"
+                    + "5. Iniciar cliente (enviar archivo).\n"
+                    + "0. Salir."));
+            switch (option) {
+                case 1:
+                    creaClaves(rsa);
+                    break;
+                case 2:
+                    cifrarArchivo(rsa);
+                    break;
+                case 3:
+                    descifrarArchivo(rsa);
+                    break;
+                case 4:
+                    iniciarservidor();
+                    break;
+                case 5:
+                    iniciarcliente();
+                    break;
+
+            }
+        } while (option != 0);
+
+    }
+
+  
+
 
   /**
    * Method that create rsa keys with specific size of bits(1024), then store to a "keys" folder
@@ -83,6 +92,18 @@ public class FileShare {
         "Claves generadas en el directorio:\n"
             + publicKeyPath.substring(0, publicKeyPath.length() - RSA.PUBLIC_KEY_NAME.length()));
   }
+
+
+    /**
+     * Method that request an public key, then a objective file, finally exports
+     * to an encrypted file on the folder encrypt
+     *
+     * @param rsa an instance of RSA class
+     * @throws Exception Throws an exception when the main process does not
+     * finish as expected
+     *
+     */
+   
 
   /**
    * Method that request an public key, then a objective file, finally exports to an encrypted file
@@ -176,17 +197,46 @@ public class FileShare {
             + RSA.DECRYPTED_FILES_FOLDER_NAME);
   }
 
-  public static void iniciarservidor() throws IOException {
-    server = new Servidor(rsa.getPublickeyPathNAME(), rsa.getFileEncryptedpathdeliver());
-    println("iniciando servidor");
-    println("/");
-  }
 
-  public static void iniciarcliente() {
-    client = new Cliente(rsa.getPublickeyPathNAMEdeliver(), rsa.getFileEncryptedpath());
-  }
+   
+ 
 
-  public void descifrarauto() throws Exception {
-    descifrarArchivo(rsa);
-  }
+    /**
+     * Method that make a call to start the Servidor class
+     *
+     * @see Servidor
+     *
+     * @throws IOException Throws an exception when the main process does not
+     * finish as expected
+     */
+    public static void iniciarservidor() throws IOException {
+        server = new Servidor(rsa.getPublickeyPathNAME(), rsa.getFileEncryptedpathdeliver());
+        println("iniciando servidor");
+        println("/");
+    }
+
+    /**
+     * Method that make a call to start the Cliente class with parameters: the
+     * public key path where the file would be stored and the path where the
+     * encrypted file is stored
+     *
+     * @see Cliente
+     */
+    public static void iniciarcliente() {
+
+        client = new Cliente(rsa.getPublickeyPathNAMEdeliver(), rsa.getFileEncryptedpath());
+    }
+
+    /**
+     * Method that make a call to a instance of the class FileShare then use the
+     * method descrifrarArchivo();
+     *
+     * @throws Exception Throws an exception when the main process does not
+     * finish as expected
+     */
+    public void descifrarauto() throws Exception {
+        descifrarArchivo(rsa);
+
+    }
+
 }

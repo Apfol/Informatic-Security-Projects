@@ -1,7 +1,10 @@
 package com.mycompany.homework3;
 
+
 import java.io.IOException;
+
 import java.security.*;
+import static java.sql.DriverManager.println;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -27,6 +30,8 @@ public class FileShare {
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, Exception {
 
         RSA rsa = new RSA();
+        Servidor server = null;
+        Cliente client = null;
 
         int option;
         do {
@@ -45,6 +50,16 @@ public class FileShare {
                 case 3:
                     descifrarArchivo(rsa);
                     break;
+                case 4: 
+                    server = new Servidor(7777, rsa.getPublickeyPathNAME(),rsa.getFileEncryptedpathdeliver());
+                    println("iniciando servidor");
+                    println("/");
+                    break;
+                case 5:
+                    client = new Cliente("192.168.1.11",7777,rsa.getPublickeyPathNAMEdeliver(),rsa.getFileEncryptedpath());
+                    
+                    break;
+                    
             }
         } while (option != 0);
 
@@ -137,5 +152,8 @@ public class FileShare {
         //Call to an RSA class method to decrypt the configured file
         rsa.decrypt();
         JOptionPane.showMessageDialog(null, "Archivo encriptado guardado en el directorio:\n" + rootProjectPath + RSA.DECRYPTED_FILES_FOLDER_NAME);
+    }
+    public void conectaraservidor(){
+        
     }
 }

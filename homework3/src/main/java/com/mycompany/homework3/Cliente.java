@@ -2,8 +2,8 @@
 package com.mycompany.homework3;
 
 import java.awt.HeadlessException;
-import java.net.*;
 import java.io.*;
+import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
@@ -142,13 +142,17 @@ public class Cliente {
                
                 String received = dis.readUTF();
                 System.out.println(received);
-            }
 
-     
-            dis.close();
-            dos.close();
-        } catch (HeadlessException | IOException e) {
-        }
+
+
+        
+      }
+
+      // closing resources
+      // scn.close();
+      dis.close();
+      dos.close();
+    } catch (HeadlessException | IOException e) {
     }
-
+  }
 }

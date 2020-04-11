@@ -7,12 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -39,30 +38,34 @@ import javax.crypto.NoSuchPaddingException;
  * @author Carlos Gutierrez
  * @version 1.0
  * @see https://www.alvarodeleon.net/encriptar-y-desencriptar-con-rsa-en-java/
- * @author Alvaro Leon Methods taken from reference: genKeyPair(); encrypt();
- * without the file execution decrypt(); without the file execution
+ * @author Alvaro Leon Methods taken from reference: genKeyPair(); encrypt(); without the file
+ *     execution decrypt(); without the file execution
  */
 public class RSA {
 
-    static final String PUBLIC_KEY_NAME = "public.pem";
-    static final String PUBLIC_KEY_NAME_DELIVER = "publicBonifacio.pem";
-    
-    static final String PUBLIC_KEY_PATH = "keys/" + PUBLIC_KEY_NAME;
-    static final String PUBLIC_KEY_PATH_DELIVER = "keys/" + PUBLIC_KEY_NAME_DELIVER;
-    static final String PRIVATE_KEY_NAME = "private.pri";
-    static final String PRIVATE_KEY_PATH = "keys/" + PRIVATE_KEY_NAME;
-    static final String ENCRYPTED_FILES_FOLDER_NAME = "encrypt";
-    static final String FILE_ENCRYPTED_PATH = ENCRYPTED_FILES_FOLDER_NAME + "/file-encrypted";
-    static final String DECRYPTED_FILES_FOLDER_NAME = "decrypt";
-    static final String FILE_DECRYPTED_PATH = DECRYPTED_FILES_FOLDER_NAME + "/file-decrypted";
-    static final String FILE_ENCRYPTED_PATH_Deliver = ENCRYPTED_FILES_FOLDER_NAME + "/file-encryptedanastacia" ;
 
-    private PrivateKey privateKey = null;
-    private PublicKey publicKey = null;
-    private File privateKeyFile = new File(PRIVATE_KEY_PATH);
-    private File publicKeyFile = new File(PUBLIC_KEY_PATH);
-    private File fileToEncrypt;
-    private File fileToDecrypt;
+     static final String PUBLIC_KEY_NAME = "public.pem";
+  static final String PUBLIC_KEY_NAME_DELIVER = "publicBonifacio.pem";
+
+  static final String PUBLIC_KEY_PATH = "keys/" + PUBLIC_KEY_NAME;
+  static final String PUBLIC_KEY_PATH_DELIVER = "keys/" + PUBLIC_KEY_NAME_DELIVER;
+  static final String PRIVATE_KEY_NAME = "private.pri";
+  static final String PRIVATE_KEY_PATH = "keys/" + PRIVATE_KEY_NAME;
+  static final String ENCRYPTED_FILES_FOLDER_NAME = "encrypt";
+  static final String FILE_ENCRYPTED_PATH = ENCRYPTED_FILES_FOLDER_NAME + "/file-encrypted";
+  static final String DECRYPTED_FILES_FOLDER_NAME = "decrypt";
+  static final String FILE_DECRYPTED_PATH = DECRYPTED_FILES_FOLDER_NAME + "/file-decrypted";
+  static final String FILE_ENCRYPTED_PATH_Deliver =
+      ENCRYPTED_FILES_FOLDER_NAME + "/file-encryptedanastacia";
+  static final int MAXIMUN_FILE_ENCRYPT = 117;
+  static final int MAXIMUN_FILE_DECRYPT = 128;
+
+  private PrivateKey privateKey = null;
+  private PublicKey publicKey = null;
+  private File privateKeyFile = new File(PRIVATE_KEY_PATH);
+  private File publicKeyFile = new File(PUBLIC_KEY_PATH);
+  private File fileToEncrypt;
+  private File fileToDecrypt;
 
     /**
      * Method to get the public key path with the name of the file
@@ -278,174 +281,208 @@ public class RSA {
         byte[] fileToEncryptBytes = Files.readAllBytes(fileToEncrypt.toPath());
         byte[] fileToEncryptBytesEncoded = Base64.getEncoder().encode(fileToEncryptBytes);
         byte[] fileToEncryptBytesDecoded = Base64.getDecoder().decode(fileToEncryptBytesEncoded);
+    try (FileOutputStream fos =
+        new FileOutputStream(
+            FILE_ENCRYPTED_PATH + "." + getFileExtension(fileToEncrypt.getAbsolutePath()).get())) {
+      byte[] maximunBytes = new byte[MAXIMUN_FILE_ENCRYPT];
+      int counter = 0;
+      if (fileToEncryptBytesDecoded.length <= MAXIMUN_FILE_ENCRYPT) {
+
         encryptedBytes = cipher.doFinal(fileToEncryptBytesDecoded);
-
-        try (FileOutputStream fos = new FileOutputStream(FILE_ENCRYPTED_PATH + "." + getFileExtension(fileToEncrypt.getAbsolutePath()).get())) {
+        fos.write(encryptedBytes);
+      } else {
+        for (int i = 0; i < fileToEncryptBytesDecoded.length; i++) {
+          maximunBytes[counter] = fileToEncryptBytesDecoded[i];
+          if (counter == MAXIMUN_FILE_ENCRYPT - 1) {
+            encryptedBytes = cipher.doFinal(maximunBytes);
             fos.write(encryptedBytes);
+            maximunBytes = new byte[MAXIMUN_FILE_ENCRYPT];
+            counter = 0;
+          } else if (i == fileToEncryptBytesDecoded.length - 1) {
+            encryptedBytes = cipher.doFinal(maximunBytes);
+            fos.write(encryptedBytes);
+          } else {
+            counter++;
+          }
         }
+      }
     }
+  }
 
-    /**
-     * Method to decrypt the file previously settled. Transform the file into a
-     * byte array, then drops it into the file decrypted path. "decrypt"
-     * directory.
-     *
-     * @throws NoSuchAlgorithmException Throws an exception when an
-     * Cryptographic algorithm is requested but is not available.
-     * @throws InvalidKeyException Throws an exception when there is an invalid
-     * encoding key
-     * @throws NoSuchPaddingException Throws an exception when there is an
-     * particular padding mechanism requested but is not available
-     * @throws IllegalBlockSizeException Throws an exception when there is an
-     * length of data provided to a block cipher is incorrect
-     * @throws BadPaddingException Throws an exception when the provided data is
-     * not padding properly
-     * @throws FileNotFoundException Throws an exception when the requested file
-     * is not available.
-     * @throws UnsupportedEncodingException Throws an exception when the file
-     * encoding is different form expected
-     */
-    public void decrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException, IOException {
-        byte[] decryptedBytes;
+  /**
+   * Method to decrypt the file previously settled. Transform the file into a byte array, then drops
+   * it into the file decrypted path. "decrypt" directory.
+   *
+   * @throws NoSuchAlgorithmException Throws an exception when an Cryptographic algorithm is
+   *     requested but is not available.
+   * @throws InvalidKeyException Throws an exception when there is an invalid encoding key
+   * @throws NoSuchPaddingException Throws an exception when there is an particular padding
+   *     mechanism requested but is not available
+   * @throws IllegalBlockSizeException Throws an exception when there is an length of data provided
+   *     to a block cipher is incorrect
+   * @throws BadPaddingException Throws an exception when the provided data is not padding properly
+   * @throws FileNotFoundException Throws an exception when the requested file is not available.
+   * @throws UnsupportedEncodingException Throws an exception when the file encoding is different
+   *     form expected
+   */
+  public void decrypt()
+      throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
+          IllegalBlockSizeException, BadPaddingException, FileNotFoundException, IOException {
+    byte[] decryptedBytes;
 
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
-        byte[] fileToDecryptBytes = Files.readAllBytes(fileToDecrypt.toPath());
+    Cipher cipher = Cipher.getInstance("RSA");
+    cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
+    byte[] fileToDecryptBytes = Files.readAllBytes(fileToDecrypt.toPath());
+
+    try (FileOutputStream fos =
+        new FileOutputStream(
+            FILE_DECRYPTED_PATH + "." + getFileExtension(fileToDecrypt.getAbsolutePath()).get())) {
+      byte[] maximunBytes = new byte[MAXIMUN_FILE_DECRYPT];
+      int counter = 0;
+      if (fileToDecryptBytes.length <= MAXIMUN_FILE_DECRYPT) {
         decryptedBytes = cipher.doFinal(fileToDecryptBytes);
-
-        try (FileOutputStream fos = new FileOutputStream(FILE_DECRYPTED_PATH + "." + getFileExtension(fileToDecrypt.getAbsolutePath()).get())) {
+        fos.write(decryptedBytes);
+      } else {
+        for (int i = 0; i < fileToDecryptBytes.length; i++) {
+          maximunBytes[counter] = fileToDecryptBytes[i];
+          if (counter == MAXIMUN_FILE_DECRYPT - 1) {
+            decryptedBytes = cipher.doFinal(maximunBytes);
             fos.write(decryptedBytes);
+            maximunBytes = new byte[MAXIMUN_FILE_DECRYPT];
+            counter = 0;
+          } else if (i == fileToDecryptBytes.length - 1) {
+            decryptedBytes = cipher.doFinal(maximunBytes);
+            fos.write(decryptedBytes);
+          } else {
+            counter++;
+          }
         }
+      }
     }
+  }
 
-    /**
-     * Method that get the file extension of an file and check if it is null
-     *
-     * @param filename String with the filename that would be used
-     * @return Returns the file extension, if it is not null
-     */
-    public Optional<String> getFileExtension(String filename) {
-        return Optional.ofNullable(filename)
-                .filter(f -> f.contains("."))
-                .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+  /**
+   * Method that get the file extension of an file and check if it is null
+   *
+   * @param filename String with the filename that would be used
+   * @return Returns the file extension, if it is not null
+   */
+  public Optional<String> getFileExtension(String filename) {
+    return Optional.ofNullable(filename)
+        .filter(f -> f.contains("."))
+        .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+  }
+
+  /**
+   * Method that transform a set of bytes to a string
+   *
+   * @param b A byte array that may contains a set of bytes.
+   * @return Returns a string with the byte array encoded into a bigInteger
+   */
+  public String bytesToString(byte[] b) {
+    byte[] b2 = new byte[b.length + 1];
+    b2[0] = 1;
+    System.arraycopy(b, 0, b2, 1, b.length);
+    return new BigInteger(b2).toString(36);
+  }
+
+  /**
+   * Method that transform a String to a set of bytes.
+   *
+   * @param s A string that may contains a value to be converted into a byte set.
+   * @return Returns a set of bytes(Array)
+   */
+  public byte[] stringToBytes(String s) {
+    byte[] b2 = new BigInteger(s, 36).toByteArray();
+    return Arrays.copyOfRange(b2, 1, b2.length);
+  }
+
+  /**
+   * Method that saves the private key to a specific path settled
+   *
+   * @param path A String with the path to save the private key file
+   * @return Returns Null
+   * @throws IOException Throws an exception when the main process does not finish as expected
+   */
+  public String saveToDiskPrivateKey(String path) throws IOException {
+    this.privateKeyFile = new File(path);
+    FileOutputStream fileOutput = new FileOutputStream(privateKeyFile);
+    try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
+      out.write(this.getPrivateKeyString());
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
+    return null;
+  }
 
-    /**
-     * Method that transform a set of bytes to a string
-     *
-     * @param b A byte array that may contains a set of bytes.
-     * @return Returns a string with the byte array encoded into a bigInteger
-     */
-    public String bytesToString(byte[] b) {
-        byte[] b2 = new byte[b.length + 1];
-        b2[0] = 1;
-        System.arraycopy(b, 0, b2, 1, b.length);
-        return new BigInteger(b2).toString(36);
+  /**
+   * Method that saves the public key to a specific path settled
+   *
+   * @param path A String with the path to save the public key file
+   * @return Returns Null
+   * @throws Exception Throws an exception when the main process does not finish as expected
+   */
+  public String saveToDiskPublicKey(String path) throws Exception {
+    this.publicKeyFile = new File(path);
+    FileOutputStream fileOutput = new FileOutputStream(publicKeyFile);
+    try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
+      out.write(this.getPublicKeyString());
+      return publicKeyFile.getAbsolutePath();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
+    return null;
+  }
 
-    /**
-     * Method that transform a String to a set of bytes.
-     *
-     * @param s A string that may contains a value to be converted into a byte
-     * set.
-     * @return Returns a set of bytes(Array)
-     */
-    public byte[] stringToBytes(String s) {
-        byte[] b2 = new BigInteger(s, 36).toByteArray();
-        return Arrays.copyOfRange(b2, 1, b2.length);
+  /**
+   * Method that find out the public key path and set it
+   *
+   * @param path A String with the path where the public key is stored
+   * @throws IOException Throws an exception when the main process does not finish as expected
+   * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is
+   *     requested but it is not available
+   * @throws InvalidKeySpecException Throws an exception when the selected key file does not have
+   *     the correct specifications.
+   */
+  public void openFromDiskPublicKey(String path)
+      throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    String content = this.readFileAsString(path);
+    this.setPublicKeyString(content);
+  }
+
+  /**
+   * Method that find out the private key path and set it
+   *
+   * @param path A String with the path where the private key is stored
+   * @throws IOException Throws an exception when the main process does not finish as expected
+   * @throws NoSuchAlgorithmException Throws an exception when the cryptographic algorithm is
+   *     requested but it is not available
+   * @throws InvalidKeySpecException Throws an exception when the selected key file does not have
+   *     the correct specifications.
+   */
+  public void openFromDiskPrivateKey(String path)
+      throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    String content = this.readFileAsString(path);
+    this.setPrivateKeyString(content);
+  }
+
+  /**
+   * Method that recover a file to be encrypt or decrypt
+   *
+   * @param filePath A String with the path where a objective file is stored
+   * @throws IOException Throws an exception when the main process does not finish as expected
+   * @return String with the file data prepared to be encrypt or decrypt
+   */
+  private String readFileAsString(String filePath) throws IOException {
+    StringBuilder fileData = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+      char[] buf = new char[1024];
+      int numRead = 0;
+      while ((numRead = reader.read(buf)) != -1) {
+        String readData = String.valueOf(buf, 0, numRead);
+        fileData.append(readData);
+      }
     }
-
-    /**
-     * Method that saves the private key to a specific path settled
-     *
-     * @param path A String with the path to save the private key file
-     * @return Returns Null
-     * @throws IOException Throws an exception when the main process does not
-     * finish as expected
-     */
-    public String saveToDiskPrivateKey(String path) throws IOException {
-        this.privateKeyFile = new File(path);
-        FileOutputStream fileOutput = new FileOutputStream(privateKeyFile);
-        try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
-            out.write(this.getPrivateKeyString());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Method that saves the public key to a specific path settled
-     *
-     * @param path A String with the path to save the public key file
-     * @return Returns Null
-     * @throws Exception Throws an exception when the main process does not
-     * finish as expected
-     */
-    public String saveToDiskPublicKey(String path) throws Exception {
-        this.publicKeyFile = new File(path);
-        FileOutputStream fileOutput = new FileOutputStream(publicKeyFile);
-        try (Writer out = new BufferedWriter(new OutputStreamWriter(fileOutput, "UTF-8"))) {
-            out.write(this.getPublicKeyString());
-            return publicKeyFile.getAbsolutePath();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Method that find out the public key path and set it
-     *
-     * @param path A String with the path where the public key is stored
-     * @throws IOException Throws an exception when the main process does not
-     * finish as expected
-     * @throws NoSuchAlgorithmException Throws an exception when the
-     * cryptographic algorithm is requested but it is not available
-     * @throws InvalidKeySpecException Throws an exception when the selected key
-     * file does not have the correct specifications.
-     */
-    public void openFromDiskPublicKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String content = this.readFileAsString(path);
-        this.setPublicKeyString(content);
-    }
-
-    /**
-     * Method that find out the private key path and set it
-     *
-     * @param path A String with the path where the private key is stored
-     * @throws IOException Throws an exception when the main process does not
-     * finish as expected
-     * @throws NoSuchAlgorithmException Throws an exception when the
-     * cryptographic algorithm is requested but it is not available
-     * @throws InvalidKeySpecException Throws an exception when the selected key
-     * file does not have the correct specifications.
-     */
-    public void openFromDiskPrivateKey(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String content = this.readFileAsString(path);
-        this.setPrivateKeyString(content);
-    }
-
-    /**
-     * Method that recover a file to be encrypt or decrypt
-     *
-     * @param filePath A String with the path where a objective file is stored
-     * @throws IOException Throws an exception when the main process does not
-     * finish as expected
-     * @return String with the file data prepared to be encrypt or decrypt
-     */
-    private String readFileAsString(String filePath) throws IOException {
-        StringBuilder fileData = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(
-                new FileReader(filePath))) {
-            char[] buf = new char[1024];
-            int numRead = 0;
-            while ((numRead = reader.read(buf)) != -1) {
-                String readData = String.valueOf(buf, 0, numRead);
-                fileData.append(readData);
-            }
-        }
-        return fileData.toString();
-    }
-
+    return fileData.toString();
+  }
 }

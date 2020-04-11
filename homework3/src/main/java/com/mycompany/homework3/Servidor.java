@@ -1,8 +1,9 @@
 
 package com.mycompany.homework3;
 
-import java.net.*; 
-import java.io.*; 
+import java.io.*;
+import java.net.*;
+
 
 /**
  * Class Servidor works as an socket server with capacity to manage socket threads
@@ -65,16 +66,13 @@ public class Servidor {
                 
                 
 
-                  
-            } 
-            catch (Exception e){ 
-                s.close(); 
-                e.printStackTrace(); 
-            } 
-        } 
+
+
+
+      } catch (Exception e) {
+        s.close();
+        e.printStackTrace();
+      }
     }
-  
-   
-    
-    
+  }
 }

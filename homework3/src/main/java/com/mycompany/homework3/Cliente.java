@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author Andres Ramos
  * @author Carlos Gutierrez
  * @version 1.0
- * @see CllientHandler
+ * @see ClientHandler
  */
 public class Cliente {
 

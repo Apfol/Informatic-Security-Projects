@@ -10,7 +10,7 @@ import java.net.*;
  * @author Andres Ramos
  * @author Carlos Gutierrez
  * @version 1.0
- * @see CllientHandler
+ * @see ClientHandler
  */
 public class Servidor {
 
@@ -28,7 +28,7 @@ public class Servidor {
      * finish as expected
      *
      * @author Geeksforgeeks
-     * @see
+     * Review
      * https://www.geeksforgeeks.org/introducing-threads-socket-programming-java/
      * All the instructions between the while loop where taker from the link
      * referenced

@@ -114,7 +114,7 @@ public class ClientHandler extends Thread {
      * @throws IOException Throws an exception when the main process does not
      * finish as expected
      *
-     * @see https://www.rgagnon.com/javadetails/java-0542.html
+     * Review https://www.rgagnon.com/javadetails/java-0542.html
      * @author Real Gagnon. Just the file sender operation
      *
      */
@@ -159,7 +159,7 @@ public class ClientHandler extends Thread {
      * @throws IOException Throws an exception when the main process does not
      * finish as expected
      *
-     * @see https://www.rgagnon.com/javadetails/java-0542.html
+     * Review https://www.rgagnon.com/javadetails/java-0542.html
      * @author Real Gagnon. Just the file sender operation
      *
      */

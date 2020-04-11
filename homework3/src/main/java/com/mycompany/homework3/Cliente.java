@@ -38,6 +38,9 @@ public class Cliente {
         try {
 
            
+            
+            
+            
 
             // getting localhost ip 
             String ip = JOptionPane.showInputDialog("Ingrese la ip a la que desea conectarse ","localhost");

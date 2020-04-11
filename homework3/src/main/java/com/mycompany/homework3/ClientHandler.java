@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,7 +28,7 @@ import javax.swing.JOptionPane;
 public class ClientHandler extends Thread {
 
     final DataInputStream dis;
-
+    boolean b = false;
     final DataOutputStream dos;
     String pathpublickey;
     String pathtosave;
@@ -43,16 +45,18 @@ public class ClientHandler extends Thread {
         this.pathpublickey = pathpublickey;
         this.pathtosave = pathtosaves;
     }
+    
 
     @Override
     public void run() {
         String received;
-        String tostore;
+        
         while (true) {
             try {
 
                 // Ask user what he wants 
-                dos.writeUTF("Selecione un opcion: " + "\n"
+                
+                dos.writeUTF(   "Selecione un opcion: " + "\n"
                         + "1. Solicitar clave publica" + "\n"
                         + "2. Enviar archivo cifrado con clave publica");
 
@@ -61,7 +65,7 @@ public class ClientHandler extends Thread {
                 switch (received) {
                     case "1":
 
-//                        dos.writeUTF("Enviando clave publica");
+
                         try {
                         System.out.println("Entro a clienthandler");
                         File myFile = new File(pathpublickey);
@@ -97,7 +101,7 @@ public class ClientHandler extends Thread {
                         BufferedOutputStream bos = null;
                         try {
                             System.out.println("Entro");
-//                    System.out.println(dis.readUTF());
+
                             String ext = ".txt";
                             ext="."+dis.readUTF();
                             byte[] mybytearray = new byte[FILE_SIZE];
@@ -130,6 +134,11 @@ public class ClientHandler extends Thread {
                                 s.close();
                             }
                         }
+                        b=true;
+                        JOptionPane.showMessageDialog(null, "Se comenzara la desencriptacion del archivo recibido.");
+                        FileShare scv = new FileShare();
+                        scv.descifrarauto();
+                        
                         break;
 
                     case "Exit":
@@ -144,6 +153,8 @@ public class ClientHandler extends Thread {
                 }
 
             } catch (IOException e) {
+            } catch (Exception ex) {
+                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

@@ -26,14 +26,14 @@ public class Cliente {
     BufferedOutputStream bos = null;
 
     // constructor to put ip address and port 
-    public Cliente(String address, int port, String pathtosave, String pathfileencrypted) {
-        Scanner scn = new Scanner(System.in);
+    public Cliente( String pathtosave, String pathfileencrypted) {
+        //Scanner scn = new Scanner(System.in);
         try {
 
-            scn.reset();
+           // scn.reset();
 
             // getting localhost ip 
-            InetAddress ip = InetAddress.getByName("localhost");
+            String ip = JOptionPane.showInputDialog("Ingrese la ip a la que desea conectarse ","localhost");
 
             // establish the connection with server port 5056 
             Socket s = new Socket(ip, 5056);
@@ -46,9 +46,10 @@ public class Cliente {
             // the following loop performs the exchange of 
             // information between client and client handler 
             while (true) {
-                System.out.println(dis.readUTF());
-                scn.reset();
-                String tosend = scn.nextLine();
+                String tosend=JOptionPane.showInputDialog(dis.readUTF());
+                
+               // scn.reset();
+//                 = scn.nextLine();
                 dos.writeUTF(tosend);
 
                 // If client sends exit,close this connection  
@@ -89,7 +90,9 @@ public class Cliente {
                             s.close();
                         }
                     }
-                    scn.reset();
+                   // scn.reset();
+                    //scn.close();
+                    
                     break;
                 } else if (tosend.equals("2")) {
                     FileInputStream fis = null;
@@ -129,13 +132,13 @@ public class Cliente {
                     break;
                 }
 
-                // printing date or time as requested by client 
+               
                 String received = dis.readUTF();
                 System.out.println(received);
             }
 
             // closing resources 
-            scn.close();
+           // scn.close();
             dis.close();
             dos.close();
         } catch (HeadlessException | IOException e) {

@@ -7,28 +7,23 @@ package com.mycompany.homework3;
 
 import java.net.*; 
 import java.io.*; 
-import static java.sql.DriverManager.println;
-import javax.swing.JOptionPane;
+
 /**
  *
  * @author apolu
  */
 public class Servidor {
-     private Socket          socket   = null; 
-    private ServerSocket    server   = null; 
-    private DataInputStream in       =  null; 
-    private DataOutputStream out = null;
-    private DataInputStream input       =  null; 
+     
     
 
     
   
     // constructor with port 
-    public  Servidor(int port, String publicpath,String pathtosave) throws IOException   { 
+    public  Servidor( String publicpath,String pathtosave) throws IOException   { 
          // starts server and waits for a connection 
        // server is listening on port 5056 
         ServerSocket ss = new ServerSocket(5056); 
-          String publickeypath="";
+         
         // running infinite loop for getting 
         // client request 
         while (true)  
@@ -53,6 +48,9 @@ public class Servidor {
   
                 // Invoking the start() method 
                 t.start(); 
+                
+                
+
                   
             } 
             catch (Exception e){ 
